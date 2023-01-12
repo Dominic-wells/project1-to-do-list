@@ -33,4 +33,15 @@ def addTasktolist():
     else:
         conn.commit()
         print(f"Task {TaskName} added to the list")
-        
+
+#This will flag a task from the taskID Database as completed
+def completeTask():
+    TaskID = input("Enter the ID of the task you want to complete: ")
+    query = """UPDATE tasks SET TasksCompleted = TRUE WHERE taskID = ?"""
+    try:
+        cursor.execute(query, (TaskID))
+    except sqlite3.IntegrityError:
+        print("Error with completing this task")
+    else:
+        conn.commit()
+        print(f"Task {TaskID} completed") 
