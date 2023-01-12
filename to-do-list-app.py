@@ -19,3 +19,18 @@ def makeTable():
     TasksCompleted BOOLEAN NOT NULL DEFAULT FALSE)"""
     cursor.execute(query)
     conn.commit()
+    
+#This will ask for user inputs to pass information to the database
+def addTasktolist():
+    TaskName = input("Enter the name of the task: ")
+    TaskPriority = input("Enter the priority of the task (1 High 3 Low): ")
+    TaskInfo = input("Enter any additional information about the task: ")
+    query = """INSERT INTO tasks (TaskName, TaskPriority, TaskInfo) VALUES (?, ?, ?)"""
+    try:
+        cursor.execute(query, (TaskName, TaskPriority, TaskInfo))
+    except sqlite3.IntegrityError:
+        print("Task input error")
+    else:
+        conn.commit()
+        print(f"Task {TaskName} added to the list")
+        
