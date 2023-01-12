@@ -45,3 +45,18 @@ def completeTask():
     else:
         conn.commit()
         print(f"Task {TaskID} completed") 
+        
+#This will print all the tasks that have be flagged as completed
+def seeAllCompletedTasks():
+    query = """SELECT * FROM TasksCompleted=1"""
+    cursor.execute(query)
+    rows = cursor.fetchall()
+    if rows == []:
+        print("No tasks completed")
+    else:
+        for row in rows:
+            print(row)
+    for row in rows:
+        print(row)
+        
+        
