@@ -3,7 +3,7 @@ import os
 
 #This will make a database called "to-do-list"
 #If the database already exists, it will connect to it  
-db = "to-do-list.db"
+db = "C:/Users/josep/Desktop/project1/to-do-list.db"
 conn = sqlite3.connect(db)
 cursor = conn.cursor()
 
@@ -11,7 +11,7 @@ cursor = conn.cursor()
 #Guidenace taken from https://www.sqlitetutorial.net/
 def makeTable():
     query ="""CREATE TABLE tasks
-     (taskID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
+    (taskID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
     TaskName TEXT NOT NULL, 
     TaskPriority INTEGER NOT NULL, 
     TaskInfo TEXT NOT NULL,
@@ -28,7 +28,7 @@ def addTasktolist():
     query = """INSERT INTO tasks (TaskName, TaskPriority, TaskInfo) VALUES (?, ?, ?)"""
     try:
         cursor.execute(query, (TaskName, TaskPriority, TaskInfo))
-    except sqlite3.IntegrityError:
+    except: 
         print("Task input error")
     else:
         conn.commit()
@@ -45,10 +45,23 @@ def completeTask():
     else:
         conn.commit()
         print(f"Task {TaskID} completed") 
+ #This will display all the tasks that have been added to the database       
+def displayAllTasks():
+    query = """SELECT * FROM tasks"""
+    cursor.execute(query)
+    rows = cursor.fetchall()
+    if rows == []:
+        print("No tasks added")
+    else:
+        for row in rows:
+            print(row)
+    for row in rows:
+        print(row)        
         
-#This will print all the tasks that have be flagged as completed
-def seeAllCompletedTasks():
-    query = """SELECT * FROM TasksCompleted=1"""
+        
+#This will display all the tasks that have be flagged as completed
+def displayAllCompletedTasks():
+    query = """SELECT * FROM tasks where TasksCompleted=  1"""
     cursor.execute(query)
     rows = cursor.fetchall()
     if rows == []:
@@ -59,4 +72,4 @@ def seeAllCompletedTasks():
     for row in rows:
         print(row)
         
-        
+ 
