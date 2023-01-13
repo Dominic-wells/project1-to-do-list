@@ -10,7 +10,7 @@ cursor = conn.cursor()
 #This will create a table in the database
 #Guidenace taken from https://www.sqlitetutorial.net/
 def makeTable():
-    query ="""CREATE TABLE tasks
+    query ="""CREATE TABLE IF NOT EXISTS tasks
     (taskID INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, 
     TaskName TEXT NOT NULL, 
     TaskPriority INTEGER NOT NULL, 
@@ -85,4 +85,17 @@ def deleteCompletedTasks():
         conn.commit()
         print(f"Task {TaskID} deleted")
 
-
+#this will delete a tasks from the database
+def deleteATask():
+    displayAllTasks()
+    TaskID = input("Enter the ID of the task you want delete: ")
+    query = """DELETE FROM tasks WHERE TaskID = ?"""
+    try:
+        cursor.execute(query, (TaskID))
+    except sqlite3.IntegrityError:
+        print("Error with deleting this task")
+    else:
+        conn.commit()
+        print(f"Task {TaskID} deleted")
+        
+        
