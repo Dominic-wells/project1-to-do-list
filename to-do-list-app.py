@@ -36,6 +36,7 @@ def addTasktolist():
 
 #This will flag a task from the taskID Database as completed
 def completeTask():
+    displayAllTasks()
     TaskID = input("Enter the ID of the task you want to complete: ")
     query = """UPDATE tasks SET TasksCompleted = TRUE WHERE taskID = ?"""
     try:
@@ -45,6 +46,7 @@ def completeTask():
     else:
         conn.commit()
         print(f"Task {TaskID} completed") 
+        
  #This will display all the tasks that have been added to the database       
 def displayAllTasks():
     query = """SELECT * FROM tasks"""
@@ -54,9 +56,7 @@ def displayAllTasks():
         print("No tasks added")
     else:
         for row in rows:
-            print(row)
-    for row in rows:
-        print(row)        
+            print(row)       
         
         
 #This will display all the tasks that have be flagged as completed
@@ -72,4 +72,17 @@ def displayAllCompletedTasks():
     for row in rows:
         print(row)
         
- 
+#This will delete a completed task from the database.
+def deleteCompletedTasks():
+    displayAllCompletedTasks()
+    TaskID = input("Enter the ID of the task you want delete: ")
+    query = """DELETE FROM tasks WHERE TaskID = ?"""
+    try:
+        cursor.execute(query, (TaskID))
+    except sqlite3.IntegrityError:
+        print("Error with deleting this task")
+    else:
+        conn.commit()
+        print(f"Task {TaskID} deleted")
+
+
