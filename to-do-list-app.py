@@ -1,5 +1,4 @@
 import sqlite3
-import os
 
 #This will make a database called "to-do-list"
 #If the database already exists, it will connect to it  
@@ -33,6 +32,7 @@ def addTasktolist():
     else:
         conn.commit()
         print(f"Task {TaskName} added to the list")
+        print("\n") 
 
 #This will flag a task from the taskID Database as completed
 def completeTask():
@@ -45,32 +45,45 @@ def completeTask():
         print("Error with completing this task")
     else:
         conn.commit()
-        print(f"Task {TaskID} completed") 
+        print(f"Task {TaskID} completed")
         
- #This will display all the tasks that have been added to the database       
-def displayAllTasks():
-    query = """SELECT * FROM tasks"""
+         
+        
+ #This will display all the tasks that have not been flagged as completed             
+def displayNonCompletedTasks():
+    query = """SELECT * FROM tasks WHERE TasksCompleted = 0"""
     cursor.execute(query)
-    rows = cursor.fetchall()
-    if rows == []:
-        print("No tasks added")
-    else:
-        for row in rows:
-            print(row)       
-        
+    results = cursor.fetchall()
+    print("Task that are not yet completed:\n")
+    for row in results:
+        for item in row:
+            print(item, end=" ")
+        print("\n")        
+
+#This will display all the tasks that have been added to the database
+def displayAllTasks():
+    query = """SELECT taskID, TaskName, TaskPriority, TaskInfo, Dateadded, TasksCompleted FROM tasks"""
+    cursor.execute(query)
+    results = cursor.fetchall()
+    print("Task that are not yet completed:\n")
+    for row in results:
+        for item in row:
+            print(item, end=" ")
+        print("\n")      
         
 #This will display all the tasks that have be flagged as completed
 def displayAllCompletedTasks():
-    query = """SELECT * FROM tasks where TasksCompleted=  1"""
+    query = """SELECT * FROM tasks WHERE TasksCompleted = 1"""
     cursor.execute(query)
-    rows = cursor.fetchall()
-    if rows == []:
-        print("No tasks completed")
+    results = cursor.fetchall()
+    print("Completed Tasks:\n")
+    if results == []:
+        print("no tasks completed yet, please complete a task first and mark it as completed (option 2)")
     else:
-        for row in rows:
-            print(row)
-    for row in rows:
-        print(row)
+        for row in results:
+            for item in row:
+                print(item, end=" ")
+            print("\n")  
         
 #This will delete a completed task from the database.
 def deleteCompletedTasks():
@@ -98,4 +111,55 @@ def deleteATask():
         conn.commit()
         print(f"Task {TaskID} deleted")
         
-        
+def oderByPriority():
+    query = """SELECT * FROM tasks ORDER BY TaskPriority"""
+    cursor.execute(query)
+    rows = cursor.fetchall()
+    if rows == []:
+        print("No tasks added")
+    else:
+        for row in rows:
+            print(row)     
+
+def main():
+    makeTable()
+    while True:
+        print("1. Add a task to the list")
+        print("2. Complete a task")
+        print("3. Display non completed tasks")
+        print("4. Display all completed tasks")
+        print("5. Display all tasks")
+        print("6. Delete a task")
+        print("7. Delete a completed task")
+        print("8. Order by priority")
+        print("9. Exit")
+        choice = input("Enter your choice: ")
+        if choice == "1":
+            addTasktolist()
+        elif choice == "2":
+            completeTask()
+        elif choice == "3":    
+            displayNonCompletedTasks()
+        elif choice == "4":
+            displayAllCompletedTasks()
+        elif choice == "5":
+            displayAllTasks()
+        elif choice == "6":
+            deleteATask()
+        elif choice == "7":
+            deleteCompletedTasks()
+        elif choice == "8":
+            oderByPriority()
+        elif choice == "9":   
+            print("Goodbye")
+            break    
+        else:
+            print("Invalid choice")
+            
+            
+    
+if __name__ == "__main__":
+    #This will run the main menu within the 'main' function
+    print("\nTo do list app")
+    # makeTable()
+    main()
